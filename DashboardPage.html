@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edu2Job Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body { background: linear-gradient(120deg, #eef2ff, #dbeafe, #f0f9ff); min-height: 100vh; }
+
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(90deg, #4338ca, #2563eb);
+      padding: 15px 50px; color: white; box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 1.6rem; font-weight: 600; }
+    .navbar ul { list-style: none; display: flex; gap: 25px; margin: 0; }
+    .navbar ul li a { color: white; text-decoration: none; font-weight: 500; transition: 0.3s; }
+    .navbar ul li a:hover, .navbar ul li a.active { color: #facc15; text-shadow: 0 0 6px rgba(250,204,21,0.7); }
+    .logout-btn { background-color: #ef4444; border: none; padding: 8px 15px; border-radius: 6px; color: white; cursor: pointer; font-weight: 500; transition: 0.3s; }
+    .logout-btn:hover { background-color: #dc2626; transform: scale(1.05); }
+
+    .dashboard { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; }
+    .welcome-section { text-align: center; margin-bottom: 50px; }
+    .welcome-section h2 { font-size: 2rem; color: #1e293b; margin-bottom: 10px; }
+    .welcome-section .name { color: #2563eb; font-weight: 600; }
+    .welcome-section .desc { color: #555; margin-top: 10px; font-size: 1rem; }
+
+    .cards { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; }
+    .card {
+      background: white; border-radius: 16px; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+      padding: 35px 25px; width: 270px; text-align: center; transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 10px 22px rgba(0,0,0,0.18); }
+    .card img { width: 65px; height: 65px; margin-bottom: 15px; }
+    .card h3 { font-size: 1.2rem; color: #1e293b; margin-bottom: 8px; }
+    .card p { font-size: 0.95rem; color: #6b7280; margin-bottom: 18px; }
+    .yellow-btn {
+      background-color: #2563eb; border: none; padding: 10px 20px; border-radius: 8px;
+      color: #fff; font-weight: 500; cursor: pointer; transition: 0.3s; text-decoration: none;
+    }
+    .yellow-btn:hover { background-color: #1d4ed8; transform: scale(1.05); }
+
+    @media (max-width: 900px) {
+      .cards { flex-direction: column; align-items: center; }
+      .navbar { flex-direction: column; gap: 10px; text-align: center; }
+      .navbar ul { gap: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Edu2Job</div>
+    <nav>
+      <ul>
+        <li><a href="DashboardPage.html" class="active">Home</a></li>
+        <li><a href="ProfilePage.html">Profile</a></li>
+        <li><a href="PredictPage.html">Predict</a></li>
+        <li><a href="HistoryPage.html">History</a></li>
+      </ul>
+    </nav>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <div class="welcome-section">
+      <h2>Hello, <span class="name" id="usernameDisplay">User 👋</span></h2>
+      <p>Welcome to <span style="color:#2563eb; font-weight:600;">Edu2Job</span></p>
+      <p class="desc">Your trusted platform to explore, learn, and grow in your career journey.</p>
+    </div>
+
+    <div class="cards">
+      <a href="ProfilePage.html" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Profile Icon">
+        <h3>Your Profile</h3>
+        <p>View & update your personal information</p>
+        <button class="yellow-btn">View Profile</button>
+      </a>
+
+      <a href="PredictPage.html" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Prediction Icon">
+        <h3>Job Prediction</h3>
+        <p>Discover your ideal job roles with AI insights</p>
+        <button class="yellow-btn">Get Started</button>
+      </a>
+
+      <a href="HistoryPage.html" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="History Icon">
+        <h3>Prediction History</h3>
+        <p>Track and analyze your past job predictions</p>
+        <button class="yellow-btn">View History</button>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    // ✅ Fetch user name from localStorage
+    const username = localStorage.getItem("registeredName");
+
+    if (username) {
+      document.getElementById("usernameDisplay").textContent = `${username} 👋`;
+    } else {
+      // Redirect if not logged in
+      window.location.href = "index.html";
+    }
+
+    // ✅ Logout
+    function logout() {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+    }
+
+    // ✅ Highlight active page
+    const currentPage = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".navbar a").forEach(link => {
+      if (link.getAttribute("href") === currentPage) link.classList.add("active");
+    });
+  </script>
+</body>
+</html>

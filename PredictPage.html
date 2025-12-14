@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Prediction - Edu2Job</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+  body{background:linear-gradient(120deg,#eef2ff,#dbeafe,#f0f9ff);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  header{background:linear-gradient(90deg,#4338ca,#2563eb);color:white;width:100%;padding:15px 50px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 10px rgba(0,0,0,0.15);}
+  .logo{font-size:1.6rem;font-weight:600;}
+  nav ul{list-style:none;display:flex;gap:30px;}
+  nav ul li a{color:white;text-decoration:none;font-weight:500;transition:color .3s;}
+  nav ul li a:hover,nav ul li a.active{color:#facc15;}
+  .logout-btn{background:#ff5f5f;border:none;padding:8px 14px;border-radius:6px;color:white;cursor:pointer;font-weight:500;transition:.3s;}
+  .logout-btn:hover{background:#e04c4c;}
+  h1{margin-top:30px;font-size:1.8rem;color:#1e3a8a;text-align:center;}
+  .main-container{display:flex;justify-content:center;align-items:flex-start;width:90%;max-width:1200px;gap:40px;margin:40px auto;}
+  .stats-container{display:flex;flex-direction:column;gap:25px;width:280px;}
+  .stat-box{background:white;border-radius:16px;padding:25px 20px;box-shadow:0 6px 20px rgba(0,0,0,0.1);text-align:center;border-left:8px solid #4338ca;transition:.3s;}
+  .stat-box:hover{transform:translateX(10px) scale(1.03);box-shadow:0 10px 25px rgba(0,0,0,0.15);}
+  .stat-title{color:#4338ca;font-size:1.1rem;margin-bottom:10px;font-weight:600;}
+  .stat-value{font-size:1.7rem;font-weight:700;color:#1e3a8a;}
+  .results-container{display:flex;flex-direction:column;gap:20px;flex:1;}
+  .role-box{background:white;border-radius:12px;width:100%;padding:25px;box-shadow:0 5px 18px rgba(0,0,0,0.1);border-left:6px solid #4338ca;transition:.3s;}
+  .role-box:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.15);}
+  .role-box h3{color:#1e3a8a;margin-bottom:10px;font-size:1.2rem;}
+  .role-box p{color:#374151;margin-bottom:6px;font-size:.95rem;}
+  .progress-bar{background:#e0e7ff;border-radius:10px;overflow:hidden;height:12px;margin-top:8px;}
+  .progress{height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb);width:0%;transition:width 1s ease-in-out;}
+  .empty-message{background:white;padding:40px;border-radius:16px;box-shadow:0 5px 18px rgba(0,0,0,0.1);text-align:center;font-size:1.1rem;color:#374151;}
+  .fill-profile-btn{background:#2563eb;color:white;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin-top:15px;transition:.3s;}
+  .fill-profile-btn:hover{background:#1d4ed8;}
+  @media(max-width:900px){.main-container{flex-direction:column;align-items:center;}.stats-container{width:90%;flex-direction:row;justify-content:center;flex-wrap:wrap;}.stat-box{flex:1 1 45%;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Edu2Job</div>
+  <nav>
+    <ul>
+      <li><a href="DashboardPage.html">Home</a></li>
+      <li><a href="ProfilePage.html">Profile</a></li>
+      <li><a href="PredictionPage.html" class="active">Predict</a></li>
+      <li><a href="HistoryPage.html">History</a></li>
+    </ul>
+  </nav>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<h1>🚀 AI-Powered Career Match Predictions</h1>
+
+<div class="main-container">
+  <div class="stats-container" id="statsSection" style="display:none;">
+    <div class="stat-box"><div class="stat-title">Predicted Matches</div><div class="stat-value" id="predictedCount">0</div></div>
+    <div class="stat-box"><div class="stat-title">Job Openings</div><div class="stat-value" id="jobOpenings">0</div></div>
+    <div class="stat-box"><div class="stat-title">Success Rate</div><div class="stat-value" id="successRate">0%</div></div>
+  </div>
+  <div class="results-container" id="resultsContainer"></div>
+</div>
+
+<script>
+function logout(){
+  if(confirm("Are you sure you want to logout?")){
+    localStorage.clear();
+    window.location.href="index.html";
+  }
+}
+
+const resultsContainer = document.getElementById("resultsContainer");
+const statsSection = document.getElementById("statsSection");
+const userProfile = JSON.parse(localStorage.getItem("userProfile"));
+
+// Check if profile is filled
+if(!userProfile || !userProfile.skills){
+  resultsContainer.innerHTML = `
+    <div class="empty-message">
+      ⚠️ You haven't filled your profile yet.<br>
+      Please complete your details to get AI-based career predictions.<br>
+      <button class="fill-profile-btn" onclick="window.location.href='ProfilePage.html'">Go to Profile</button>
+    </div>`;
+}else{
+  statsSection.style.display = "flex";
+  const skillText = userProfile.skills.toLowerCase();
+
+  // Full skill-to-role mapping
+  const skillMap = [
+    {keywords:["python","machine learning","data","ai","ml"],roles:[
+      {name:"AI Engineer",openings:12,prob:94},
+      {name:"Data Scientist",openings:8,prob:90},
+      {name:"ML Engineer",openings:6,prob:88}
+    ]},
+    {keywords:["html","css","javascript","react","web","frontend","backend"],roles:[
+      {name:"Full Stack Developer",openings:14,prob:87},
+      {name:"Frontend Developer",openings:10,prob:82},
+      {name:"UI/UX Designer",openings:6,prob:78}
+    ]},
+    {keywords:["iot","embedded","arduino","raspberry","sensor","hardware"],roles:[
+      {name:"IoT Developer",openings:8,prob:85},
+      {name:"Embedded Systems Engineer",openings:6,prob:83}
+    ]},
+    {keywords:["marketing","seo","social media","sales","digital","brand"],roles:[
+      {name:"Digital Marketing Specialist",openings:9,prob:88},
+      {name:"Brand Strategist",openings:5,prob:80},
+      {name:"Content Marketing Manager",openings:4,prob:76}
+    ]},
+    {keywords:["finance","accounting","economics","investment","bank"],roles:[
+      {name:"Financial Analyst",openings:7,prob:85},
+      {name:"Investment Advisor",openings:5,prob:81},
+      {name:"Account Manager",openings:6,prob:78}
+    ]},
+    {keywords:["network","security","server","linux","cloud","system"],roles:[
+      {name:"Network Engineer",openings:6,prob:84},
+      {name:"Cybersecurity Analyst",openings:5,prob:82},
+      {name:"Cloud Administrator",openings:4,prob:80}
+    ]},
+    {keywords:["design","photoshop","figma","illustrator","creative"],roles:[
+      {name:"Graphic Designer",openings:8,prob:83},
+      {name:"UI Designer",openings:6,prob:80}
+    ]},
+    {keywords:["video","editing","premiere","after effects","content creation","film","davinci","videography"],roles:[
+      {name:"Video Editor",openings:10,prob:92},
+      {name:"Motion Graphics Designer",openings:7,prob:88},
+      {name:"Social Media Content Creator",openings:8,prob:85},
+      {name:"Multimedia Designer",openings:5,prob:82},
+      {name:"Digital Marketing Associate",openings:6,prob:80}
+    ]}
+  ];
+
+  // Match all relevant roles
+  let matchedRoles = [];
+  skillMap.forEach(group => {
+    if(group.keywords.some(k => skillText.includes(k))){
+      matchedRoles = matchedRoles.concat(group.roles);
+    }
+  });
+
+  // Remove duplicates
+  const uniqueRoles = [];
+  const seen = new Set();
+  matchedRoles.forEach(r => {
+    if(!seen.has(r.name)){
+      uniqueRoles.push(r);
+      seen.add(r.name);
+    }
+  });
+
+  if(uniqueRoles.length === 0){
+    resultsContainer.innerHTML = `
+      <div class="empty-message">
+        ⚠️ No matching career roles found for your skills.<br>
+        Please add relevant skills to your profile.<br>
+        <button class="fill-profile-btn" onclick="window.location.href='ProfilePage.html'">Update Profile</button>
+      </div>`;
+  }else{
+    const totalOpenings = uniqueRoles.reduce((a,b)=>a+b.openings,0);
+    const avgRate = Math.round(uniqueRoles.reduce((a,b)=>a+b.prob,0)/uniqueRoles.length);
+
+    document.getElementById("predictedCount").textContent = uniqueRoles.length;
+    document.getElementById("jobOpenings").textContent = totalOpenings;
+    document.getElementById("successRate").textContent = avgRate+"%";
+
+    uniqueRoles.forEach(r=>{
+      const box = document.createElement("div");
+      box.className = "role-box";
+      box.innerHTML = `
+        <h3>${r.name}</h3>
+        <p><strong>Openings:</strong> ${r.openings}</p>
+        <p><strong>Match Accuracy:</strong> ${r.prob}%</p>
+        <div class="progress-bar"><div class="progress" style="width:${r.prob}%;"></div></div>`;
+      resultsContainer.appendChild(box);
+    });
+  }
+}
+</script>
+
+</body>
+</html>

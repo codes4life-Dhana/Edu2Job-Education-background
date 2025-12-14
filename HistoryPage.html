@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction History - Edu2Job</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      background: linear-gradient(120deg, #eef2ff, #dbeafe, #f0f9ff);
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(90deg, #4338ca, #2563eb);
+      padding: 15px 50px; color: white; box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+    .logo { font-size: 1.6rem; font-weight: 600; }
+    .navbar ul { list-style: none; display: flex; gap: 25px; }
+    .navbar ul li a {
+      color: white; text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .navbar ul li a:hover, .navbar ul li a.active {
+      color: #facc15; text-shadow: 0 0 6px rgba(250,204,21,0.7);
+    }
+    .logout-btn {
+      background-color: #ef4444; border: none; padding: 8px 15px;
+      border-radius: 6px; color: white; cursor: pointer; font-weight: 500;
+      transition: 0.3s;
+    }
+    .logout-btn:hover { background-color: #dc2626; transform: scale(1.05); }
+
+    /* Main Content */
+    .history-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+
+    /* History Cards */
+    .history-cards {
+      display: grid;
+      gap: 25px;
+    }
+
+    .history-card {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      border-left: 6px solid #4338ca;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .history-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .prediction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .job-role {
+      font-size: 1.4rem;
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    .prediction-date {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .prediction-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail-item {
+      background: #f8fafc;
+      padding: 12px 15px;
+      border-radius: 8px;
+    }
+
+    .detail-label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 1rem;
+      color: #1e293b;
+      font-weight: 500;
+    }
+
+    .probability-badge {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .no-history {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6b7280;
+    }
+
+    .no-history h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .predict-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+
+    .predict-btn:hover {
+      background: #1d4ed8;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+      }
+      .navbar ul { gap: 15px; }
+      .prediction-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .prediction-details { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Edu2Job</div>
+    <nav>
+      <ul>
+        <li><a href="DashboardPage.html">Home</a></li>
+        <li><a href="ProfilePage.html">Profile</a></li>
+        <li><a href="PredictPage.html">Predict</a></li>
+        <li><a href="HistoryPage.html" class="active">History</a></li>
+      </ul>
+    </nav>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+
+  <main class="history-container">
+    <div class="page-header">
+      <h1>📊 Prediction History</h1>
+      <p>Review your past career predictions and track your progress</p>
+    </div>
+
+    <!-- Example history entries (replace with dynamic PHP data later) -->
+    <div class="history-cards" id="historyCards">
+      <div class="history-card">
+        <div class="prediction-header">
+          <h2 class="job-role">Software Developer</h2>
+          <div class="probability-badge">92% Match</div>
+        </div>
+        <div class="prediction-date">Predicted on: Nov 10, 2025</div>
+        <div class="prediction-details">
+          <div class="detail-item">
+            <div class="detail-label">Education</div>
+            <div class="detail-value">B.Tech in AIML</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Skills</div>
+            <div class="detail-value">Python, HTML, SQL</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Experience</div>
+            <div class="detail-value">1 year</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Job Openings</div>
+            <div class="detail-value">36</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-card">
+        <div class="prediction-header">
+          <h2 class="job-role">Data Analyst</h2>
+          <div class="probability-badge">87% Match</div>
+        </div>
+        <div class="prediction-date">Predicted on: Nov 8, 2025</div>
+        <div class="prediction-details">
+          <div class="detail-item">
+            <div class="detail-label">Education</div>
+            <div class="detail-value">B.Tech in AIML</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Skills</div>
+            <div class="detail-value">Excel, Python, Power BI</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Experience</div>
+            <div class="detail-value">Fresher</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Job Openings</div>
+            <div class="detail-value">22</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-history" id="noHistory" style="display:none;">
+      <h3>No prediction history yet</h3>
+      <p>Make your first prediction to see your career matches here!</p>
+      <button class="predict-btn" onclick="goToPredict()">Make Prediction</button>
+    </div>
+  </main>
+
+  <script>
+    function logout() {
+      if (confirm("Are you sure you want to logout?")) {
+        window.location.href = "Edu2jobRegister.html";
+      }
+    }
+    function goToPredict() {
+      window.location.href = "PredictPage.html";
+    }
+  </script>
+</body>
+</html>

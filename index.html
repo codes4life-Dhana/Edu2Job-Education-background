@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edu2Job Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #c3d9ff, #d9ccff, #b3e5fc);
+      background-size: cover;
+    }
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 1000px;
+      height: 600px;
+      background: #fefefe;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+    .left-section {
+      flex: 1;
+      background: url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1000&q=80') no-repeat center center/cover;
+      position: relative;
+    }
+    .left-section .overlay {
+      position: absolute; top: 0; left: 0;
+      height: 100%; width: 100%;
+      background: rgba(50, 40, 100, 0.6);
+      color: #fff;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 40px;
+    }
+    .left-section h1 { font-size: 2.6rem; margin-bottom: 15px; }
+    .left-section h1 span { color: #ffda79; }
+    .left-section p { font-size: 1.1rem; line-height: 1.6; color: #f3f3f3; }
+
+    .right-section {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #f7f8ff, #eef2ff);
+    }
+    .login-box {
+      width: 85%; max-width: 360px; background: #ffffff;
+      padding: 35px; border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+    .login-box h2 { text-align: center; margin-bottom: 25px; color: #333; }
+    .input-group { margin-bottom: 18px; position: relative; }
+    .input-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #444; }
+    .input-group input {
+      width: 100%; padding: 10px 40px 10px 12px;
+      border: 1px solid #ccc; border-radius: 6px;
+      outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .input-group input:focus { border-color: #6a75ff; box-shadow: 0 0 5px rgba(106, 117, 255, 0.4); }
+    .toggle-password {
+      position: absolute; right: 12px; top: 36px;
+      cursor: pointer; width: 20px; height: 20px;
+      opacity: 0.7; transition: opacity 0.3s ease;
+    }
+    .toggle-password:hover { opacity: 1; }
+    .btn {
+      width: 100%; padding: 12px;
+      background: linear-gradient(90deg, #5d6fff, #7f91ff);
+      color: #fff; border: none; border-radius: 6px;
+      font-size: 1rem; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(93, 111, 255, 0.4); }
+    .links { margin-top: 18px; display: flex; justify-content: space-between; }
+    .links a { text-decoration: none; color: #5d6fff; font-size: 0.9rem; transition: color 0.3s; }
+    .links a:hover { color: #3340d3; }
+
+    /* Loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #5d6fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; height: auto; }
+      .left-section { height: 250px; }
+      .right-section { padding: 20px 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-section">
+      <div class="overlay">
+        <h1>Welcome to <span>Edu2Job</span></h1>
+        <p>Helping students discover and match jobs that fit their skills and profiles.</p>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="login-box">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required />
+            <svg id="togglePassword" class="toggle-password" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+
+          <button type="submit" class="btn" id="loginBtn">Login</button>
+          <div class="loading" id="loadingIndicator">
+            <div class="loading-spinner"></div>
+            <p>Logging in...</p>
+          </div>
+        </form>
+
+        <div class="links">
+          <a href="./ResetPasswordPage.html">Forgot Password?</a>
+          <a href="./EdutoJobRegister.html">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const loadingIndicator = document.getElementById("loadingIndicator");
+    let isVisible = false;
+
+    togglePassword.addEventListener("click", () => {
+      isVisible = !isVisible;
+      passwordInput.type = isVisible ? "text" : "password";
+      togglePassword.style.opacity = isVisible ? "1" : "0.7";
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = passwordInput.value.trim();
+
+      if (email && password) {
+        // Show loading indicator
+        loginBtn.style.display = 'none';
+        loadingIndicator.style.display = 'block';
+        
+        // Send login request to PHP handler
+        fetch('login_handler.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Hide loading indicator
+          loginBtn.style.display = 'block';
+          loadingIndicator.style.display = 'none';
+          
+          if (data.status === 'success') {
+            alert("Login successful! Welcome to Edu2Job.");
+            
+            // Save user info in localStorage
+            localStorage.setItem("registeredName", data.user.name);
+            localStorage.setItem("registeredEmail", data.user.email);
+            localStorage.setItem("userId", data.user.id);
+
+            document.getElementById("loginForm").reset();
+            setTimeout(() => {
+              window.location.href = "DashboardPage.html";
+            }, 1000);
+          } else {
+            alert(data.message || "Login failed. Please try again.");
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Hide loading indicator
+          loginBtn.style.display = 'block';
+          loadingIndicator.style.display = 'none';
+          alert("Login failed. Please check your connection and try again.");
+        });
+      } else {
+        alert("Please enter both email and password.");
+      }
+    });
+  </script>
+</body>
+</html>

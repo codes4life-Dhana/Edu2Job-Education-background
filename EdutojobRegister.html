@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edu2Job Register</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #c3d9ff, #d9ccff, #b3e5fc);
+      background-size: cover;
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 1000px;
+      height: 650px;
+      background: #fefefe;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    .left-section {
+      flex: 1;
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1000&q=80') no-repeat center center/cover;
+      position: relative;
+    }
+
+    .left-section .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(40, 50, 110, 0.6);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .left-section h1 {
+      font-size: 2.6rem;
+      margin-bottom: 15px;
+    }
+
+    .left-section h1 span {
+      color: #ffda79;
+    }
+
+    .left-section p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #f3f3f3;
+    }
+
+    .right-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #f7f8ff, #eef2ff);
+    }
+
+    .register-box {
+      width: 85%;
+      max-width: 360px;
+      background: #ffffff;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .register-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 40px 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #6a75ff;
+      box-shadow: 0 0 5px rgba(106, 117, 255, 0.4);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 36px;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #5d6fff, #7f91ff);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(93, 111, 255, 0.4);
+    }
+
+    .links {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: #5d6fff;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .links a:hover {
+      color: #3340d3;
+    }
+
+    /* Loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #5d6fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Password strength indicator */
+    .password-strength {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      height: 15px;
+    }
+    .strength-weak { color: #e74c3c; }
+    .strength-medium { color: #f39c12; }
+    .strength-strong { color: #27ae60; }
+
+    /* Success and error messages */
+    .message {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+    }
+    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .left-section {
+        height: 250px;
+      }
+
+      .right-section {
+        padding: 20px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <div class="overlay">
+        <h1>Join <span>Edu2Job</span></h1>
+        <p>Create your account and unlock access to career guidance and job opportunities tailored for you.</p>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <div class="register-box">
+        <h2>Register</h2>
+        
+        <!-- Message display area -->
+        <div class="message" id="message"></div>
+        
+        <form id="registerForm">
+          <div class="input-group">
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Enter your name" required />
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Create password" required />
+            <div class="password-strength" id="passwordStrength"></div>
+            <svg id="togglePassword" class="toggle-password" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+
+          <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Re-enter password" required />
+            <div class="password-match" id="passwordMatch"></div>
+          </div>
+
+          <button type="submit" class="btn" id="registerBtn">Register</button>
+          <div class="loading" id="loadingIndicator">
+            <div class="loading-spinner"></div>
+            <p>Creating account...</p>
+          </div>
+        </form>
+
+        <div class="links">
+          <a href="index.html">← Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const registerBtn = document.getElementById("registerBtn");
+    const loadingIndicator = document.getElementById("loadingIndicator");
+    const passwordStrength = document.getElementById("passwordStrength");
+    const passwordMatch = document.getElementById("passwordMatch");
+    const messageDiv = document.getElementById("message");
+    let isVisible = false;
+
+    // Function to show messages
+    function showMessage(text, type) {
+      messageDiv.textContent = text;
+      messageDiv.className = `message ${type}`;
+      messageDiv.style.display = 'block';
+      
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Toggle password visibility
+    togglePassword.addEventListener("click", () => {
+      isVisible = !isVisible;
+      passwordInput.type = isVisible ? "text" : "password";
+      togglePassword.style.opacity = isVisible ? "1" : "0.7";
+    });
+
+    // Check password strength
+    passwordInput.addEventListener("input", function() {
+      const password = this.value;
+      let strength = "";
+      let strengthClass = "";
+      
+      if (password.length === 0) {
+        strength = "";
+      } else if (password.length < 6) {
+        strength = "Weak";
+        strengthClass = "strength-weak";
+      } else if (password.length < 8) {
+        strength = "Medium";
+        strengthClass = "strength-medium";
+      } else {
+        // Check for complexity
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        const complexityScore = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar].filter(Boolean).length;
+        
+        if (complexityScore >= 3) {
+          strength = "Strong";
+          strengthClass = "strength-strong";
+        } else if (complexityScore >= 2) {
+          strength = "Medium";
+          strengthClass = "strength-medium";
+        } else {
+          strength = "Weak";
+          strengthClass = "strength-weak";
+        }
+      }
+      
+      passwordStrength.textContent = strength;
+      passwordStrength.className = `password-strength ${strengthClass}`;
+    });
+
+    // Check password match
+    confirmPasswordInput.addEventListener("input", function() {
+      const password = passwordInput.value;
+      const confirmPassword = this.value;
+      
+      if (confirmPassword.length === 0) {
+        passwordMatch.textContent = "";
+      } else if (password === confirmPassword) {
+        passwordMatch.textContent = "✓ Passwords match";
+        passwordMatch.style.color = "#27ae60";
+      } else {
+        passwordMatch.textContent = "✗ Passwords don't match";
+        passwordMatch.style.color = "#e74c3c";
+      }
+    });
+
+    // Registration logic
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+      // Hide any previous messages
+      messageDiv.style.display = 'none';
+
+      if (!name || !email || !password || !confirmPassword) {
+        showMessage("Please fill in all fields.", "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match!", "error");
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        return;
+      }
+
+      // Validate password strength
+      if (password.length < 6) {
+        showMessage("Password should be at least 6 characters long.", "error");
+        return;
+      }
+
+      // Show loading indicator
+      registerBtn.style.display = 'none';
+      loadingIndicator.style.display = 'block';
+
+      // Send registration data to PHP handler
+      fetch('register_handler.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Hide loading indicator
+        registerBtn.style.display = 'block';
+        loadingIndicator.style.display = 'none';
+        
+        if (data.status === 'success') {
+          showMessage(`Welcome ${name}! Registration Successful.`, "success");
+          
+          // Save user info in localStorage
+          localStorage.setItem("registeredName", name);
+          localStorage.setItem("registeredEmail", email);
+
+          document.getElementById("registerForm").reset();
+          passwordStrength.textContent = "";
+          passwordMatch.textContent = "";
+          
+          // Redirect to login page after 2 seconds
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 2000);
+        } else {
+          showMessage(data.message || "Registration failed. Please try again.", "error");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Hide loading indicator
+        registerBtn.style.display = 'block';
+        loadingIndicator.style.display = 'none';
+        showMessage("Registration failed. Please check your connection and try again.", "error");
+      });
+    });
+  </script>
+</body>
+</html>
